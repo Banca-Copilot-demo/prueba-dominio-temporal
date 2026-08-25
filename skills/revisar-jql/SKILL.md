@@ -5,6 +5,8 @@ description: Revisa una consulta JQL y explica por que cada cambio la mejora. Us
 
 # Revisar JQL
 
+MARCADOR-COMMIT-POSTERIOR-NO-DEBE-APARECER
+
 Cuando recibas una consulta JQL, revisa en este orden y explica el porque de cada cambio:
 
 1. **Filtro de proyecto.** Sin `project = ` la consulta recorre toda la instancia.
