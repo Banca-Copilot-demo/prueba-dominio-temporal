@@ -1,0 +1,10 @@
+{
+  "name": "demo.sdlc.migrar",
+  "version": "0.1.0",
+  "description": "Punto de entrada para planificar una migracion de plataforma.",
+  "author": {
+    "name": "Squad SDLC (demo)"
+  },
+  "repository": "https://github.com/Banca-Copilot-demo/agentes-sdlc",
+  "license": "Proprietary"
+}
