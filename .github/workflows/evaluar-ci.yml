@@ -39,7 +39,11 @@ jobs:
 
       - name: Comprobar que el CLI se autentica en CI
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          # PRIMERO EN EL ORDEN DE PRECEDENCIA del CLI, por delante de GH_TOKEN y GITHUB_TOKEN.
+          # Hace falta porque el token de Actions hereda la politica de la ORGANIZACION, y esta no
+          # tiene asientos de Copilot: responde `Access denied by policy settings`. Este token presta
+          # una suscripcion que si los tiene.
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           # LO PRIMERO QUE HAY QUE SABER, y por separado: si esto falla, lo que falle despues no
           # dice nada del motor de evaluacion ni del artefacto.
@@ -58,7 +62,11 @@ jobs:
 
       - name: Ejecutar la suite real
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          # PRIMERO EN EL ORDEN DE PRECEDENCIA del CLI, por delante de GH_TOKEN y GITHUB_TOKEN.
+          # Hace falta porque el token de Actions hereda la politica de la ORGANIZACION, y esta no
+          # tiene asientos de Copilot: responde `Access denied by policy settings`. Este token presta
+          # una suscripcion que si los tiene.
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           EVALS_PROYECTO: ${{ github.workspace }}
         run: |
           cable="${GITHUB_WORKSPACE}/.estandar/evals/puente_copilot.py"
