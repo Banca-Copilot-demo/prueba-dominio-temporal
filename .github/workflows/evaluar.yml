@@ -1,0 +1,59 @@
+name: Evaluar artefactos
+
+# PRUEBA DE VIABILIDAD del gate condicional: bloquear SOLO si el artefacto trae evals.
+#
+# LA PIEZA QUE LO HACE POSIBLE, y es la que hay que comprobar: un job SALTADO reporta «Success» y no
+# impide mergear aunque sea una comprobacion requerida. Eso permite exigirla siempre y que aun asi no
+# bloquee a quien publica sin evaluaciones.
+#
+# EL FILTRO DE RUTAS NO SIRVE PARA ESTO, y es el error clasico: con `on: pull_request: paths:` la
+# comprobacion NO SE REPORTA cuando no hay coincidencia, y una comprobacion requerida que nunca
+# reporta deja el pull request bloqueado para siempre. Por eso el disparador NO lleva `paths` y la
+# condicion vive en el JOB.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  detectar:
+    name: Detectar si hay evaluaciones
+    runs-on: ubuntu-latest
+    outputs:
+      hay_evals: ${{ steps.buscar.outputs.hay_evals }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar suites de evaluacion
+        id: buscar
+        shell: bash
+        run: |
+          # Una suite es `*/evals/promptfooconfig.yaml` a cualquier profundidad: la de un skill vive
+          # junto a el y la de un mcp en la raiz de su unidad.
+          if find . -path ./.git -prune -o -name "promptfooconfig.yaml" -print | grep -q .; then
+            echo "hay_evals=true" >> "$GITHUB_OUTPUT"
+            echo "Hay suites: la evaluacion es exigible."
+          else
+            echo "hay_evals=false" >> "$GITHUB_OUTPUT"
+            echo "Sin suites: se publicara como Conforme, sin certificar."
+          fi
+
+  evaluar:
+    name: Evaluacion de comportamiento
+    needs: detectar
+    if: needs.detectar.outputs.hay_evals == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # SIMULADO A PROPOSITO: lo que se esta midiendo es el CABLEADO del gate condicional, no el
+      # motor de evaluacion. Un fallo real y uno simulado producen el mismo estado de comprobacion.
+      - name: Ejecutar la suite
+        shell: bash
+        run: |
+          if [ -f "FALLAR_LOS_EVALS" ]; then
+            echo "::error::la suite no pasa: el artefacto se quedaria sin certificar"
+            exit 1
+          fi
+          echo "suite superada"
