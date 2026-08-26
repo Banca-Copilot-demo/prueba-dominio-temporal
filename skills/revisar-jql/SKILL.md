@@ -15,3 +15,4 @@ Cuando recibas una consulta JQL, revisa en este orden y explica el porque de cad
 4. **Orden por campo personalizado.** `ORDER BY cf[...]` obliga a ordenar en memoria.
 
 Devuelve siempre la consulta corregida Y la razon de cada cambio.
+cambio menor
