@@ -2,6 +2,7 @@
   "name": "demo.sdlc.migrar",
   "version": "0.1.0",
   "description": "Punto de entrada para planificar una migracion de plataforma.",
+  "commands": "./commands",
   "author": {
     "name": "Squad SDLC (demo)"
   },
