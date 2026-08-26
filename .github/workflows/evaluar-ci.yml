@@ -1,0 +1,67 @@
+name: Evaluar en CI
+
+# PRUEBA DE VIABILIDAD de lo unico que quedaba sin comprobar del gate de evaluacion: si el CLI de
+# Copilot se autentica en un runner de GitHub Actions. Todas las evaluaciones que se habian corrido
+# hasta ahora fueron LOCALES, en una maquina con la sesion ya iniciada, asi que no probaban nada
+# sobre CI.
+#
+# La receta es la documentada: permiso `copilot-requests: write` y el token del propio workflow.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  copilot-requests: write
+
+env:
+  VERSION_NODE: "22"
+  VERSION_PYTHON: "3.13"
+  VERSION_PROMPTFOO: "0.118.16"
+
+jobs:
+  evaluar:
+    name: Evaluacion de comportamiento
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.VERSION_NODE }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.VERSION_PYTHON }}
+
+      - name: Instalar el CLI de Copilot
+        run: npm install -g @github/copilot
+
+      - name: Comprobar que el CLI se autentica en CI
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # LO PRIMERO QUE HAY QUE SABER, y por separado: si esto falla, lo que falle despues no
+          # dice nada del motor de evaluacion ni del artefacto.
+          salida="$(copilot --yolo -p 'responde solo: AUTENTICADO' 2>&1)" || {
+            echo "::error::el CLI de Copilot NO se autentica en CI"
+            printf '%s\n' "$salida" | head -20
+            exit 1
+          }
+          printf '%s\n' "$salida" | tail -5
+
+      - name: Descargar el puente del estandar
+        uses: actions/checkout@v4
+        with:
+          repository: Banca-Copilot-demo/estandar-agentico
+          path: .estandar
+
+      - name: Ejecutar la suite real
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          EVALS_PROYECTO: ${{ github.workspace }}
+        run: |
+          cable="${GITHUB_WORKSPACE}/.estandar/evals/puente_copilot.py"
+          npx --yes "promptfoo@${VERSION_PROMPTFOO}" eval \
+            -c "${GITHUB_WORKSPACE}/.github/skills/revisar-jql/evals/promptfooconfig.yaml" \
+            -r "file://$cable" --grader "file://$cable" --no-cache
