@@ -1,97 +1,25 @@
 {
-  "name": "agentico-beta",
+  "name": "prueba-compuesto",
   "owner": {
-    "name": "Plataforma Agentica (demo)",
+    "name": "Plataforma Agentica (prueba de plugin compuesto)",
     "email": "plataforma-agentica@ejemplo.dev"
   },
   "metadata": {
-    "description": "GENERADO por el workflow del indice: no editar a mano.",
-    "version": "0.1.0"
+    "description": "PRUEBA: dos formas de agrupar artefactos POR REFERENCIA en vez de por carpeta. Los artefactos viven en agents/ y commands/, y los plugins sólo los apuntan.",
+    "version": "0.0.1"
   },
   "plugins": [
     {
-      "name": "demo.plataforma.agentico",
-      "description": "Plugin de plataforma del Track Agentico: asistente de autoria de artefactos y esqueletos conformes al estandar agentico.",
-      "version": "0.2.0",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/estandar-agentico",
-        "path": "plugins/asistente-autoria",
-        "ref": "demo.plataforma.agentico--v0.2.0",
-        "sha": "3cbd4fb2a057d7a9bdf8116567a24c149742c63a"
-      }
+      "name": "compuesto-top",
+      "description": "PRUEBA A: referencia por campos de primer nivel (agents, commands).",
+      "version": "0.1.0",
+      "source": "plugins/compuesto-top"
     },
     {
-      "name": "demo.sdlc.catalogo-datos",
-      "description": "Un solo servidor MCP: acceso de lectura al catalogo de datos del dominio SDLC.",
-      "version": "0.2.0",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "plugins/catalogo-datos",
-        "ref": "demo.sdlc.catalogo-datos--v0.2.0",
-        "sha": "ac08d13a6698d62568659c9214f26f3c10329166"
-      }
-    },
-    {
-      "name": "demo.sdlc.contratos",
-      "description": "Validacion de contratos OpenAPI del dominio SDLC.",
-      "version": "0.2.2",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "plugins/contratos",
-        "ref": "demo.sdlc.contratos--v0.2.2",
-        "sha": "b39c31b29c326f590aa9547a27662278e7abed11"
-      }
-    },
-    {
-      "name": "demo.sdlc.mcp-aws-knowledge",
-      "description": "Un solo servidor MCP: la base de conocimiento publica de AWS, de solo lectura. Existe como plugin propio para poder aprobarlo y revocarlo por separado del resto.",
-      "version": "0.2.0",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "plugins/mcp-aws-knowledge",
-        "ref": "demo.sdlc.mcp-aws-knowledge--v0.2.0",
-        "sha": "5e1be424cde15741c86cb7750f0dd2bec7a05451"
-      }
-    },
-    {
-      "name": "demo.sdlc.migracion",
-      "description": "Planificacion y ejecucion de migraciones de plataforma del dominio SDLC.",
-      "version": "0.2.1",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "plugins/migracion",
-        "ref": "demo.sdlc.migracion--v0.2.1",
-        "sha": "e09b14d3d35b24bc8126e453d94693abdcf6923c"
-      }
-    },
-    {
-      "name": "demo.sdlc.referencia",
-      "description": "Plugin de referencia del dominio SDLC: lleva un artefacto de cada tipo para ejercitar el estandar de punta a punta.",
-      "version": "0.1.2",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "plugins/referencia",
-        "ref": "demo.sdlc.referencia--v0.1.2",
-        "sha": "0a864018b7d7997a3a3e60027b82cffb0091e0c0"
-      }
-    },
-    {
-      "name": "demo.sdlc.revisar-jql",
-      "description": "Revisa una consulta JQL de Jira y senala los filtros que faltan, las proyecciones excesivas y las clausulas que degradan el rendimiento.",
-      "version": "0.2.4",
-      "source": {
-        "source": "github",
-        "repo": "Banca-Copilot-demo/agentes-sdlc",
-        "path": "skills/revisar-jql",
-        "ref": "demo.sdlc.revisar-jql--v0.2.4",
-        "sha": "a1d62ff23710e66ce387624c62997dc88b6289df"
-      }
+      "name": "compuesto-ext",
+      "description": "PRUEBA B: referencia por espacio de nombres de proveedor, como awesome-copilot.",
+      "version": "0.1.0",
+      "source": "plugins/compuesto-ext"
     }
   ]
 }
