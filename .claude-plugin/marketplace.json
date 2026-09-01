@@ -15,10 +15,10 @@
       "version": "0.1.0",
       "source": {
         "source": "git-subdir",
-        "url": "https://github.com/Banca-Copilot-demo/prueba-dominio-temporal.git",
+        "url": "https://github.com/Banca-Copilot-demo/agentes-sdlc.git",
         "path": "skills/revisar-jql",
-        "ref": "main",
-        "sha": "5aa5b951dfd12f54a7bb86395a578aad89e85fa5"
+        "ref": "demo.sdlc.revisar-jql--v0.2.4",
+        "sha": "a1d62ff23710e66ce387624c62997dc88b6289df"
       }
     }
   ]
