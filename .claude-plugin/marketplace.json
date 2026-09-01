@@ -20,6 +20,12 @@
       "description": "PRUEBA B: referencia por espacio de nombres de proveedor, como awesome-copilot.",
       "version": "0.1.0",
       "source": "plugins/compuesto-ext"
+    },
+    {
+      "name": "compuesto-skill",
+      "description": "PRUEBA C: replica exacta de awesome-copilot — un directorio de skill.",
+      "version": "0.1.0",
+      "source": "plugins/compuesto-skill"
     }
   ]
 }
