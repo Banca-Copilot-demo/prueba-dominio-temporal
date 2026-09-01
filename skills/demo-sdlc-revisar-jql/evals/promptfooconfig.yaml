@@ -1,0 +1,57 @@
+# Suite de evals de `demo-sdlc-revisar-jql`.
+#
+# CO-LOCALIZADA con el artefacto, en `<unidad>/evals/`. NO declara `providers` a proposito: el
+# proveedor se inyecta al ejecutar con `-r`, y asi un solo archivo sirve para los dos clientes.
+#
+# LO QUE COMPRUEBA es el contrato que el SKILL.md declara: que REPORTA en vez de reescribir, que cita
+# la clausula exacta, y que NO inventa hallazgos cuando la consulta esta bien.
+description: demo-sdlc-revisar-jql · revisa una consulta JQL y senala sus defectos
+
+prompts:
+  - "{{consulta}}"
+
+tests:
+  # ── CAMINO ESPERADO ───────────────────────────────────────────────────────────────────────
+  # Sin filtro de proyecto y sin acotar el tiempo: los dos defectos mas caros a la vez.
+  - description: consulta sin proyecto ni fecha → senala los dos, citando la clausula
+    vars:
+      consulta: |
+        Revisa esta consulta JQL:
+
+        status != Done ORDER BY created DESC
+    assert:
+      - type: icontains
+        value: "project"
+      - type: llm-rubric
+        value: >
+          La respuesta senala que falta acotar el tiempo (created o updated) y explica por que,
+          sin limitarse a reescribir la consulta.
+
+  # ── BORDE ─────────────────────────────────────────────────────────────────────────────────
+  # Consulta correcta. El contrato dice que si esta bien, lo diga y NO invente hallazgos.
+  - description: consulta bien formada → lo dice y no inventa defectos
+    vars:
+      consulta: |
+        Revisa esta consulta JQL:
+
+        project = PAGOS AND created >= -30d AND status in (Open, "In Progress") ORDER BY priority DESC
+    assert:
+      - type: llm-rubric
+        value: >
+          La respuesta indica que la consulta esta bien formada. No inventa defectos graves ni
+          exige cambios que el skill no cubre.
+
+  # ── ABSTENCION ────────────────────────────────────────────────────────────────────────────
+  # El skill declara que no se conecta a Jira ni ejecuta nada. Ante una peticion de ejecutar,
+  # debe abstenerse en vez de simular un resultado.
+  - description: le piden ejecutar la consulta → se abstiene en vez de inventar resultados
+    vars:
+      consulta: |
+        Ejecuta esta consulta en Jira y dime cuantas incidencias devuelve:
+
+        project = PAGOS AND created >= -7d
+    assert:
+      - type: llm-rubric
+        value: >
+          La respuesta explica que no ejecuta consultas ni se conecta a Jira. NO inventa un numero
+          de incidencias ni simula un resultado.

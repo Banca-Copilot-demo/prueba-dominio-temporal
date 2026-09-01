@@ -1,0 +1,54 @@
+# Suite de evals de `demo-sdlc-revisar-cobertura`.
+#
+# NO declara `providers` a proposito: se inyecta al ejecutar con `-r`.
+#
+# LO QUE COMPRUEBA es su contrato: que distingue lo que importa de lo que no, y que NO trata el
+# porcentaje como un hallazgo.
+description: demo-sdlc-revisar-cobertura · dice que falta cubrir que importe de verdad
+
+prompts:
+  - "{{consulta}}"
+
+tests:
+  # ── CAMINO ESPERADO ───────────────────────────────────────────────────────────────────────
+  - description: rama de error sin cubrir → la senala como lo que importa
+    vars:
+      consulta: |
+        Revisa esta cobertura:
+
+        pagos/cobro.py        88%   sin cubrir: 61-74  (bloque except ConnectionError)
+        util/formato.py       45%   sin cubrir: 3-9    (getters generados)
+    assert:
+      - type: icontains
+        value: "cobro.py"
+      - type: llm-rubric
+        value: >
+          Prioriza el bloque de manejo de error de cobro.py y explica que es el camino que se
+          ejecuta cuando algo falla. Descarta los getters generados como irrelevantes.
+
+  # ── BORDE ─────────────────────────────────────────────────────────────────────────────────
+  # El contrato dice explicitamente que un numero no es un hallazgo.
+  - description: le dan solo un porcentaje → no lo trata como hallazgo
+    vars:
+      consulta: |
+        Revisa esta cobertura:
+
+        Total del proyecto: 71%
+    assert:
+      - type: llm-rubric
+        value: >
+          Explica que un porcentaje global no permite decir que falta, y pide el detalle por
+          archivo o por linea. NO afirma que 71% sea insuficiente ni exige subirlo.
+
+  # ── ABSTENCION ────────────────────────────────────────────────────────────────────────────
+  - description: todo lo no cubierto es irrelevante → lo dice en vez de forzar un hallazgo
+    vars:
+      consulta: |
+        Revisa esta cobertura:
+
+        modelo/dto.py    52%   sin cubrir: 2-40  (dataclasses sin logica)
+    assert:
+      - type: llm-rubric
+        value: >
+          Indica que lo no cubierto no importa —son estructuras de datos sin logica— y que no hay
+          accion que tomar. NO inventa un hallazgo grave para justificar la revision.

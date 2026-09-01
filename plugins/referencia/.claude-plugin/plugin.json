@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "demo-sdlc-referencia",
+  "version": "0.1.0",
+  "description": "Plugin de referencia del dominio SDLC: agrupa un agente, un skill y un comando que se revocan y se versionan juntos.",
+  "author": {
+    "name": "Squad SDLC (demo)"
+  },
+  "repository": "https://github.com/Banca-Copilot-demo/prueba-dominio-temporal",
+  "license": "Proprietary",
+  "keywords": [
+    "agentico",
+    "sdlc",
+    "referencia"
+  ]
+}

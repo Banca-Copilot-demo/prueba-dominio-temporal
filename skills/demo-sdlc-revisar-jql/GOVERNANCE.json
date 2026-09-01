@@ -1,0 +1,13 @@
+{
+  "id": "demo-sdlc-revisar-jql",
+  "domain": "sdlc",
+  "owner": {
+    "team": "squad-sdlc",
+    "contact": "squad-sdlc@ejemplo.dev"
+  },
+  "data_classification": "internal",
+  "standard_version": "8.0.0",
+  "artifacts": {
+    "skills": ["demo-sdlc-revisar-jql"]
+  }
+}

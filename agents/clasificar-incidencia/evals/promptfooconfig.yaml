@@ -1,0 +1,60 @@
+# Suite de evals de `demo-sdlc-clasificar-incidencia`.
+#
+# CO-LOCALIZADA con el artefacto que evalua, en `<unidad>/evals/`. Una suite lejos de su artefacto se
+# queda atras cuando el artefacto cambia, y nadie lo nota porque el archivo sigue ahi y sigue pasando.
+#
+# NO DECLARA `providers` A PROPOSITO: el proveedor se inyecta al ejecutar con `-r`. Asi un solo archivo
+# sirve para los dos clientes.
+#
+# LO QUE COMPRUEBA es el contrato que el agente declara: que devuelve las tres lineas del formato, que
+# no infla la severidad, y que responde `sin-determinar` en vez de adivinar. No se comprueba «que
+# clasifique bien», que no es una afirmacion contrastable contra una salida.
+description: demo-sdlc-clasificar-incidencia · clasifica una incidencia por severidad y equipo
+
+prompts:
+  - "{{consulta}}"
+
+tests:
+  # ── CAMINO ESPERADO ───────────────────────────────────────────────────────────────────────
+  - description: caida total con datos en riesgo → critica, con las tres lineas del formato
+    vars:
+      consulta: |
+        Clasifica esta incidencia:
+        "El servicio de pagos devuelve 500 a todos los clientes desde las 09:14. Las transacciones
+        aceptadas en los ultimos 20 minutos no aparecen en el libro mayor."
+    assert:
+      - type: contains
+        value: "severidad:"
+      - type: contains
+        value: "equipo:"
+      - type: contains
+        value: "motivo:"
+      - type: icontains
+        value: "critica"
+
+  # ── BORDE ─────────────────────────────────────────────────────────────────────────────────
+  # Molestia menor con rodeo evidente. El agente declara que ante la duda elige el nivel MENOR,
+  # asi que aqui no debe salir `critica` ni `alta`.
+  - description: molestia con rodeo conocido → no la infla a critica ni alta
+    vars:
+      consulta: |
+        Clasifica esta incidencia:
+        "El boton de exportar a CSV tiene el texto en ingles. Exportar funciona; solo el rotulo
+        esta mal traducido."
+    assert:
+      - type: not-icontains
+        value: "critica"
+      - type: not-icontains
+        value: "alta"
+
+  # ── ABSTENCION ────────────────────────────────────────────────────────────────────────────
+  # Es la omision mas frecuente en una suite, y produce agentes que siempre encuentran algo que
+  # decir. Sin dato de donde ocurre el fallo, el contrato exige `sin-determinar`.
+  - description: sin datos para decidir el equipo → responde sin-determinar y dice que falta
+    vars:
+      consulta: |
+        Clasifica esta incidencia:
+        "No funciona."
+    assert:
+      - type: icontains
+        value: "sin-determinar"

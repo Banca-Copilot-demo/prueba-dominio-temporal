@@ -1,0 +1,62 @@
+# Suite de evals de `demo-sdlc-revisar`, el comando.
+#
+# NO declara `providers` a proposito: se inyecta al ejecutar con `-r`.
+#
+# LO QUE COMPRUEBA es lo que el comando declara: que mira el DIFF y no el estado final, que devuelve
+# el formato de tres severidades, y que no inventa hallazgos.
+description: demo-sdlc-revisar · lanza la revision del cambio pendiente
+
+prompts:
+  - "{{consulta}}"
+
+tests:
+  # ── CAMINO ESPERADO ───────────────────────────────────────────────────────────────────────
+  - description: devuelve el formato con severidad, ruta y linea
+    vars:
+      consulta: |
+        Revisa el cambio pendiente:
+
+        --- a/indice/github.py
+        +++ b/indice/github.py
+        @@ -80,2 +80,2 @@
+        -  publicados = [r for r in releases if not r.get("isDraft") and not r.get("isPrerelease")]
+        +  publicados = list(releases)
+    assert:
+      - type: icontains
+        value: "github.py"
+      - type: llm-rubric
+        value: >
+          Senala que ahora entran al indice borradores y prelanzamientos, y explica la consecuencia.
+          Usa una de las tres severidades del formato.
+
+  # ── BORDE ─────────────────────────────────────────────────────────────────────────────────
+  # El comando dice que mira el DIFF, no el estado final.
+  - description: le dan un archivo completo sin diff → pide el cambio, no revisa el estado final
+    vars:
+      consulta: |
+        Revisa el cambio pendiente. Aqui tienes el archivo entero:
+
+        def sumar(a, b):
+            return a + b
+    assert:
+      - type: llm-rubric
+        value: >
+          Explica que necesita ver el cambio —el diff contra la rama base— y no el estado final del
+          archivo. NO revisa el archivo como si fuera el cambio.
+
+  # ── ABSTENCION ────────────────────────────────────────────────────────────────────────────
+  - description: cambio trivial y correcto → una linea, sin hallazgos inventados
+    vars:
+      consulta: |
+        Revisa el cambio pendiente:
+
+        --- a/docs/guia.md
+        +++ b/docs/guia.md
+        @@ -3,1 +3,1 @@
+        -Esta guia explica el proceso
+        -Esta guia explica el proceso de publicacion
+    assert:
+      - type: llm-rubric
+        value: >
+          Responde que el cambio esta bien, en una linea. NO produce hallazgos graves ni avisos
+          sobre codigo que el diff no toca.

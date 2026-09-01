@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "demo-sdlc-clasificar-incidencia",
+  "version": "0.1.0",
+  "description": "Clasifica una incidencia entrante por severidad y equipo responsable, con el criterio del dominio SDLC.",
+  "author": {
+    "name": "Squad SDLC (demo)"
+  },
+  "repository": "https://github.com/Banca-Copilot-demo/prueba-dominio-temporal",
+  "license": "Proprietary",
+  "keywords": [
+    "agentico",
+    "sdlc",
+    "incidencias"
+  ]
+}

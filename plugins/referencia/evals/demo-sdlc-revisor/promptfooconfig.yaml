@@ -1,0 +1,73 @@
+# Suite de evals de `demo-sdlc-revisor`.
+#
+# UNA SUITE POR ARTEFACTO, aunque los tres vivan en el mismo plugin: cada artefacto declara su propio
+# contrato y se evalua contra el suyo. Una suite unica para el plugin no podria decir CUAL fallo.
+#
+# NO declara `providers` a proposito: se inyecta al ejecutar con `-r`.
+description: demo-sdlc-revisor · revisa un pull request y prioriza los hallazgos
+
+prompts:
+  - "{{consulta}}"
+
+tests:
+  # ── CAMINO ESPERADO ───────────────────────────────────────────────────────────────────────
+  - description: defecto claro → lo senala con archivo y linea
+    vars:
+      consulta: |
+        Revisa este cambio:
+
+        --- a/pagos/cobro.py
+        +++ b/pagos/cobro.py
+        @@ -40,7 +40,7 @@
+        -    if respuesta.status_code == 200:
+        -        registrar(respuesta)
+        +    registrar(respuesta)
+    assert:
+      - type: icontains
+        value: "cobro.py"
+      - type: llm-rubric
+        value: >
+          Senala que ahora se registra la respuesta sin comprobar que fuera correcta, y explica la
+          consecuencia. Incluye la ubicacion del hallazgo.
+
+  # ── BORDE ─────────────────────────────────────────────────────────────────────────────────
+  # El contrato dice que prioriza lo que falla EN SILENCIO sobre lo ruidoso.
+  - description: dos defectos, uno silencioso → pone primero el silencioso
+    vars:
+      consulta: |
+        Revisa este cambio:
+
+        --- a/ci/validar.sh
+        +++ b/ci/validar.sh
+        @@ -10,3 +10,3 @@
+        -  ejecutar_comprobaciones || exit 1
+        +  ejecutar_comprobaciones || true
+
+        --- a/util/texto.py
+        +++ b/util/texto.py
+        @@ -5,1 +5,1 @@
+        -def limpiar(t): return t.strip()
+        +def limpiar(t): return t.strip(
+    assert:
+      - type: llm-rubric
+        value: >
+          Trata el cambio de `|| exit 1` a `|| true` como el hallazgo mas grave, porque hace que las
+          comprobaciones terminen en verde sin proteger nada. El error de sintaxis se menciona pero
+          no se prioriza por encima, porque falla ruidosamente.
+
+  # ── ABSTENCION ────────────────────────────────────────────────────────────────────────────
+  - description: cambio correcto → lo dice y no inventa hallazgos
+    vars:
+      consulta: |
+        Revisa este cambio:
+
+        --- a/README.md
+        +++ b/README.md
+        @@ -1,1 +1,1 @@
+        -# Servicio de pagos
+        +# Servicio de pagos del dominio SDLC
+    assert:
+      - type: llm-rubric
+        value: >
+          Indica que el cambio esta bien y no requiere accion. NO inventa hallazgos graves ni
+          exige cambios sobre codigo que el diff no toca.
