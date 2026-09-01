@@ -1,31 +1,37 @@
 {
-  "name": "prueba-compuesto",
+  "name": "prueba-bundle",
   "owner": {
-    "name": "Plataforma Agentica (prueba de plugin compuesto)",
+    "name": "Plataforma Agentica (prueba de plugin compuesto por dependencias)",
     "email": "plataforma-agentica@ejemplo.dev"
   },
   "metadata": {
-    "description": "PRUEBA: dos formas de agrupar artefactos POR REFERENCIA en vez de por carpeta. Los artefactos viven en agents/ y commands/, y los plugins sólo los apuntan.",
+    "description": "PRUEBA: tres unidades independientes, cada una un plugin, y un cuarto plugin que sólo las declara como dependencias. Mide si el bundle arrastra a las tres, en Claude y en Copilot.",
     "version": "0.0.1"
   },
   "plugins": [
     {
-      "name": "compuesto-top",
-      "description": "PRUEBA A: referencia por campos de primer nivel (agents, commands).",
+      "name": "demo.sdlc.revisor",
+      "description": "Unidad suelta: un agente. Vive en agents/revisor.",
       "version": "0.1.0",
-      "source": "plugins/compuesto-top"
+      "source": "agents/revisor"
     },
     {
-      "name": "compuesto-ext",
-      "description": "PRUEBA B: referencia por espacio de nombres de proveedor, como awesome-copilot.",
+      "name": "demo.sdlc.migrar",
+      "description": "Unidad suelta: un comando. Vive en commands/migrar.",
       "version": "0.1.0",
-      "source": "plugins/compuesto-ext"
+      "source": "commands/migrar"
     },
     {
-      "name": "compuesto-skill",
-      "description": "PRUEBA C: replica exacta de awesome-copilot — un directorio de skill.",
+      "name": "demo.sdlc.revisar-jql",
+      "description": "Unidad suelta: un skill. Vive en skills/revisar-jql.",
       "version": "0.1.0",
-      "source": "plugins/compuesto-skill"
+      "source": "skills/revisar-jql"
+    },
+    {
+      "name": "bundle-sdlc",
+      "description": "Plugin COMPUESTO: no lleva contenido propio, sólo declara las tres unidades como dependencias.",
+      "version": "0.1.0",
+      "source": "plugins/bundle-sdlc"
     }
   ]
 }
