@@ -17,7 +17,8 @@
         "source": "git-subdir",
         "url": "https://github.com/Banca-Copilot-demo/prueba-dominio-temporal.git",
         "path": "skills/revisar-jql",
-        "ref": "main"
+        "ref": "main",
+        "sha": "5aa5b951dfd12f54a7bb86395a578aad89e85fa5"
       }
     }
   ]
