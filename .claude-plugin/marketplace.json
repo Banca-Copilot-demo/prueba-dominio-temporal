@@ -13,25 +13,25 @@
       "name": "demo.sdlc.revisor",
       "description": "Unidad suelta: un agente. Vive en agents/revisor.",
       "version": "0.1.0",
-      "source": "agents/revisor"
+      "source": "./agents/revisor"
     },
     {
       "name": "demo.sdlc.migrar",
       "description": "Unidad suelta: un comando. Vive en commands/migrar.",
       "version": "0.1.0",
-      "source": "commands/migrar"
+      "source": "./commands/migrar"
     },
     {
       "name": "demo.sdlc.revisar-jql",
       "description": "Unidad suelta: un skill. Vive en skills/revisar-jql.",
       "version": "0.1.0",
-      "source": "skills/revisar-jql"
+      "source": "./skills/revisar-jql"
     },
     {
       "name": "bundle-sdlc",
       "description": "Plugin COMPUESTO: no lleva contenido propio, sólo declara las tres unidades como dependencias.",
       "version": "0.1.0",
-      "source": "plugins/bundle-sdlc"
+      "source": "./plugins/bundle-sdlc"
     }
   ]
 }
