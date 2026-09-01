@@ -1,0 +1,24 @@
+{
+  "name": "agentico-beta",
+  "owner": {
+    "name": "Plataforma Agentica (prueba de canal beta)",
+    "email": "plataforma-agentica@ejemplo.dev"
+  },
+  "metadata": {
+    "description": "PRUEBA: indice de canal beta en un repositorio PRIVADO. Sirve para medir si el cliente puede anadir un marketplace privado y si el permiso de lectura del repositorio actua como control de audiencia.",
+    "version": "0.0.1"
+  },
+  "plugins": [
+    {
+      "name": "demo.sdlc.revisar-jql",
+      "description": "Revisa una consulta JQL y explica por que cada cambio la mejora. Entrada de PRUEBA del canal beta.",
+      "version": "0.1.0",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/Banca-Copilot-demo/prueba-dominio-temporal.git",
+        "path": "skills/revisar-jql",
+        "ref": "main"
+      }
+    }
+  ]
+}
